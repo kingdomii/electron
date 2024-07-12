@@ -1,4 +1,44 @@
----
+from flask import Flask, render_template, request, jsonify
+
+app = Flask(__name__)
+
+class UAPAAssistant:
+    def __init__(self):
+        self.info = {
+            "oferta académica": "La UAPA ofrece carreras en áreas como Educación, Ciencias Jurídicas, Ciencias Económicas y Empresariales, Ciencias y Tecnología, y Ciencias de la Salud. Puedes encontrar más detalles en https://www.uapa.edu.do/oferta-academica/",
+            "admisión": "Para el proceso de admisión, debes completar el formulario en línea, pagar la cuota de admisión, y presentar los documentos requeridos. Más información en https://www.uapa.edu.do/admisiones/",
+            "matrícula": "La matrícula se realiza a través del portal Mi UAPA. Ingresa a https://www.uapa.edu.do/mi-uapa/ y sigue las instrucciones para seleccionar tus asignaturas.",
+            "calendario académico": "El calendario académico actual está disponible en el portal Mi UAPA. Visita https://www.uapa.edu.do/mi-uapa/ para acceder a las fechas importantes.",
+            "becas": "La UAPA ofrece varios programas de becas. Puedes encontrar información detallada en https://www.uapa.edu.do/becas/",
+            "biblioteca virtual": "Accede a la biblioteca virtual a través de https://www.uapa.edu.do/mi-uapa/. Allí encontrarás recursos digitales para tus estudios.",
+            "contacto": "Para contactar con la universidad, puedes llamar al 809-724-0266 o enviar un correo a info@uapa.edu.do. Más detalles en https://www.uapa.edu.do/contactanos/",
+            "mi uapa": "Mi UAPA es el portal estudiantil donde puedes acceder a tus cursos, calificaciones, y realizar trámites académicos. Ingresa en https://www.uapa.edu.do/mi-uapa/",
+            "educación a distancia": "La UAPA se especializa en educación a distancia. Utilizamos plataformas en línea para ofrecer flexibilidad en tus estudios. Más información en https://www.uapa.edu.do/modelo-educativo/",
+            "servicios estudiantiles": "Ofrecemos diversos servicios como consejería académica, apoyo tecnológico, y orientación profesional. Visita https://www.uapa.edu.do/servicios-estudiantiles/ para más detalles."
+        }
+
+    def process_query(self, query):
+        query = query.lower()
+        for keyword, response in self.info.items():
+            if keyword in query:
+                return response
+        return "Lo siento, no tengo información específica sobre esa consulta. Te sugiero visitar https://www.uapa.edu.do/ o contactar directamente con la universidad para obtener más detalles."
+
+assistant = UAPAAssistant()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/query', methods=['POST'])
+def query():
+    data = request.json
+    query = data['query']
+    response = assistant.process_query(query)
+    return jsonify({'response': response})
+
+if __name__ == '__main__':
+    app.run(debug=True)---
 title: 'Introduction'
 description: 'Welcome to the Electron documentation! If this is your first time developing an Electron app, read through this Getting Started section to get familiar with the basics. Otherwise, feel free to explore our guides and API documentation!'
 slug: /latest/
